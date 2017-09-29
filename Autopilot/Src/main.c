@@ -59,6 +59,7 @@
 /* USER CODE BEGIN Includes */
 #include "debug.h"
 #include "altimeter.h"
+#include "mpu9255.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -126,6 +127,18 @@ int main(void)
   debug_init();
   debug("Starting up...");
 
+  MPU9255_t mpu;
+  MPU9255_Init(&mpu);
+
+  for (;;) {
+    MPU9255_ReadAccel(&mpu);
+    MPU9255_ReadGyro(&mpu);
+    MPU9255_ReadMag(&mpu);
+    debug("Acc: X: %.2f,\tY: %.2f,\tZ: %.2f", mpu.Ax, mpu.Ay, mpu.Az);
+    debug("Gyr: X: %.2f,\tY: %.2f,\tZ: %.2f", mpu.Gx, mpu.Gy, mpu.Gz);
+    debug("Mag: X: %.2f,\tY: %.2f,\tZ: %.2f", mpu.Mx, mpu.My, mpu.Mz);
+    HAL_Delay(100);
+  }
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */
