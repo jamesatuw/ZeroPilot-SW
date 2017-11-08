@@ -40,10 +40,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "tim.h"
 
-#include "gpio.h"
-
 /* USER CODE BEGIN 0 */
-#include "debug.h"
 
 /* USER CODE END 0 */
 
@@ -200,7 +197,6 @@ void MX_TIM3_Init(void)
 /* TIM14 init function */
 void MX_TIM14_Init(void)
 {
-  TIM_IC_InitTypeDef sConfigIC;
 
   htim14.Instance = TIM14;
   htim14.Init.Prescaler = 2;
@@ -209,20 +205,6 @@ void MX_TIM14_Init(void)
   htim14.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim14.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim14) != HAL_OK)
-  {
-    _Error_Handler(__FILE__, __LINE__);
-  }
-
-  if (HAL_TIM_IC_Init(&htim14) != HAL_OK)
-  {
-    _Error_Handler(__FILE__, __LINE__);
-  }
-
-  sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_RISING;
-  sConfigIC.ICSelection = TIM_ICSELECTION_DIRECTTI;
-  sConfigIC.ICPrescaler = TIM_ICPSC_DIV1;
-  sConfigIC.ICFilter = 0;
-  if (HAL_TIM_IC_ConfigChannel(&htim14, &sConfigIC, TIM_CHANNEL_1) != HAL_OK)
   {
     _Error_Handler(__FILE__, __LINE__);
   }
@@ -402,7 +384,6 @@ void MX_TIM17_Init(void)
 void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* tim_baseHandle)
 {
 
-  GPIO_InitTypeDef GPIO_InitStruct;
   if(tim_baseHandle->Instance==TIM1)
   {
   /* USER CODE BEGIN TIM1_MspInit 0 */
@@ -432,16 +413,6 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* tim_baseHandle)
   /* USER CODE END TIM14_MspInit 0 */
     /* TIM14 clock enable */
     __HAL_RCC_TIM14_CLK_ENABLE();
-  
-    /**TIM14 GPIO Configuration    
-    PB1     ------> TIM14_CH1 
-    */
-    GPIO_InitStruct.Pin = PPM_Pin;
-    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-    GPIO_InitStruct.Alternate = GPIO_AF0_TIM14;
-    HAL_GPIO_Init(PPM_GPIO_Port, &GPIO_InitStruct);
 
     /* TIM14 interrupt Init */
     HAL_NVIC_SetPriority(TIM14_IRQn, 0, 0);
@@ -629,11 +600,6 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* tim_baseHandle)
   /* USER CODE END TIM14_MspDeInit 0 */
     /* Peripheral clock disable */
     __HAL_RCC_TIM14_CLK_DISABLE();
-  
-    /**TIM14 GPIO Configuration    
-    PB1     ------> TIM14_CH1 
-    */
-    HAL_GPIO_DeInit(PPM_GPIO_Port, PPM_Pin);
 
     /* TIM14 interrupt Deinit */
     HAL_NVIC_DisableIRQ(TIM14_IRQn);

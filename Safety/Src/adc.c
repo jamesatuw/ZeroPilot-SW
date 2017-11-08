@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * File Name          : SPI.c
+  * File Name          : ADC.c
   * Description        : This file provides code for the configuration
-  *                      of the SPI instances.
+  *                      of the ADC instances.
   ******************************************************************************
   ** This notice applies to any and all portions of this file
   * that are not between comment pairs USER CODE BEGIN and
@@ -38,7 +38,7 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
-#include "spi.h"
+#include "adc.h"
 
 #include "gpio.h"
 
@@ -46,99 +46,91 @@
 
 /* USER CODE END 0 */
 
-SPI_HandleTypeDef hspi1;
+ADC_HandleTypeDef hadc;
 
-/* SPI1 init function */
-void MX_SPI1_Init(void)
+/* ADC init function */
+void MX_ADC_Init(void)
 {
+  ADC_ChannelConfTypeDef sConfig;
 
-  hspi1.Instance = SPI1;
-  hspi1.Init.Mode = SPI_MODE_SLAVE;
-  hspi1.Init.Direction = SPI_DIRECTION_2LINES;
-  hspi1.Init.DataSize = SPI_DATASIZE_16BIT;
-  hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
-  hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
-  hspi1.Init.NSS = SPI_NSS_HARD_INPUT;
-  hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
-  hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
-  hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
-  hspi1.Init.CRCPolynomial = 7;
-  hspi1.Init.CRCLength = SPI_CRC_LENGTH_DATASIZE;
-  hspi1.Init.NSSPMode = SPI_NSS_PULSE_DISABLE;
-  if (HAL_SPI_Init(&hspi1) != HAL_OK)
+    /**Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion) 
+    */
+  hadc.Instance = ADC1;
+  hadc.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV1;
+  hadc.Init.Resolution = ADC_RESOLUTION_12B;
+  hadc.Init.DataAlign = ADC_DATAALIGN_RIGHT;
+  hadc.Init.ScanConvMode = ADC_SCAN_DIRECTION_FORWARD;
+  hadc.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
+  hadc.Init.LowPowerAutoWait = DISABLE;
+  hadc.Init.LowPowerAutoPowerOff = DISABLE;
+  hadc.Init.ContinuousConvMode = DISABLE;
+  hadc.Init.DiscontinuousConvMode = DISABLE;
+  hadc.Init.ExternalTrigConv = ADC_SOFTWARE_START;
+  hadc.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
+  hadc.Init.DMAContinuousRequests = DISABLE;
+  hadc.Init.Overrun = ADC_OVR_DATA_PRESERVED;
+  if (HAL_ADC_Init(&hadc) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
+    /**Configure for the selected ADC regular channel to be converted. 
+    */
+  sConfig.Channel = ADC_CHANNEL_9;
+  sConfig.Rank = ADC_RANK_CHANNEL_NUMBER;
+  sConfig.SamplingTime = ADC_SAMPLETIME_1CYCLE_5;
+  if (HAL_ADC_ConfigChannel(&hadc, &sConfig) != HAL_OK)
   {
     _Error_Handler(__FILE__, __LINE__);
   }
 
 }
 
-void HAL_SPI_MspInit(SPI_HandleTypeDef* spiHandle)
+void HAL_ADC_MspInit(ADC_HandleTypeDef* adcHandle)
 {
 
   GPIO_InitTypeDef GPIO_InitStruct;
-  if(spiHandle->Instance==SPI1)
+  if(adcHandle->Instance==ADC1)
   {
-  /* USER CODE BEGIN SPI1_MspInit 0 */
+  /* USER CODE BEGIN ADC1_MspInit 0 */
 
-  /* USER CODE END SPI1_MspInit 0 */
-    /* SPI1 clock enable */
-    __HAL_RCC_SPI1_CLK_ENABLE();
+  /* USER CODE END ADC1_MspInit 0 */
+    /* ADC1 clock enable */
+    __HAL_RCC_ADC1_CLK_ENABLE();
   
-    /**SPI1 GPIO Configuration    
-    PA15     ------> SPI1_NSS
-    PB3     ------> SPI1_SCK
-    PB4     ------> SPI1_MISO
-    PB5     ------> SPI1_MOSI 
+    /**ADC GPIO Configuration    
+    PB1     ------> ADC_IN9 
     */
-    GPIO_InitStruct.Pin = GPIO_PIN_15;
-    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pin = GPIO_PIN_1;
+    GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-    GPIO_InitStruct.Alternate = GPIO_AF0_SPI1;
-    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-    GPIO_InitStruct.Pin = GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5;
-    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-    GPIO_InitStruct.Alternate = GPIO_AF0_SPI1;
     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-    /* SPI1 interrupt Init */
-    HAL_NVIC_SetPriority(SPI1_IRQn, 0, 0);
-    HAL_NVIC_EnableIRQ(SPI1_IRQn);
-  /* USER CODE BEGIN SPI1_MspInit 1 */
+  /* USER CODE BEGIN ADC1_MspInit 1 */
 
-  /* USER CODE END SPI1_MspInit 1 */
+  /* USER CODE END ADC1_MspInit 1 */
   }
 }
 
-void HAL_SPI_MspDeInit(SPI_HandleTypeDef* spiHandle)
+void HAL_ADC_MspDeInit(ADC_HandleTypeDef* adcHandle)
 {
 
-  if(spiHandle->Instance==SPI1)
+  if(adcHandle->Instance==ADC1)
   {
-  /* USER CODE BEGIN SPI1_MspDeInit 0 */
+  /* USER CODE BEGIN ADC1_MspDeInit 0 */
 
-  /* USER CODE END SPI1_MspDeInit 0 */
+  /* USER CODE END ADC1_MspDeInit 0 */
     /* Peripheral clock disable */
-    __HAL_RCC_SPI1_CLK_DISABLE();
+    __HAL_RCC_ADC1_CLK_DISABLE();
   
-    /**SPI1 GPIO Configuration    
-    PA15     ------> SPI1_NSS
-    PB3     ------> SPI1_SCK
-    PB4     ------> SPI1_MISO
-    PB5     ------> SPI1_MOSI 
+    /**ADC GPIO Configuration    
+    PB1     ------> ADC_IN9 
     */
-    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_15);
+    HAL_GPIO_DeInit(GPIOB, GPIO_PIN_1);
 
-    HAL_GPIO_DeInit(GPIOB, GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5);
+  /* USER CODE BEGIN ADC1_MspDeInit 1 */
 
-    /* SPI1 interrupt Deinit */
-    HAL_NVIC_DisableIRQ(SPI1_IRQn);
-  /* USER CODE BEGIN SPI1_MspDeInit 1 */
-
-  /* USER CODE END SPI1_MspDeInit 1 */
+  /* USER CODE END ADC1_MspDeInit 1 */
   }
 } 
 

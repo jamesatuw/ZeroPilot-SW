@@ -49,7 +49,7 @@
   * @brief This is the list of modules to be used in the HAL driver 
   */
 #define HAL_MODULE_ENABLED  
-/*#define HAL_ADC_MODULE_ENABLED   */
+#define HAL_ADC_MODULE_ENABLED
 /*#define HAL_CRYP_MODULE_ENABLED   */
 /*#define HAL_CAN_MODULE_ENABLED   */
 /*#define HAL_CEC_MODULE_ENABLED   */
@@ -182,7 +182,7 @@
 * Deactivated: CRC code cleaned from driver
 */
 
-#define USE_SPI_CRC                     1U
+#define USE_SPI_CRC                     0U
 
 /* Includes ------------------------------------------------------------------*/
 /**

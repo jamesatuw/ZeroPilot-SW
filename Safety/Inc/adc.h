@@ -1,7 +1,8 @@
 /**
   ******************************************************************************
-  * File Name          : main.h
-  * Description        : This file contains the common defines of the application
+  * File Name          : ADC.h
+  * Description        : This file provides code for the configuration
+  *                      of the ADC instances.
   ******************************************************************************
   ** This notice applies to any and all portions of this file
   * that are not between comment pairs USER CODE BEGIN and
@@ -36,72 +37,45 @@
   ******************************************************************************
   */
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __MAIN_H
-#define __MAIN_H
-  /* Includes ------------------------------------------------------------------*/
+#ifndef __adc_H
+#define __adc_H
+#ifdef __cplusplus
+ extern "C" {
+#endif
+
+/* Includes ------------------------------------------------------------------*/
+#include "stm32f0xx_hal.h"
+#include "main.h"
 
 /* USER CODE BEGIN Includes */
 
 /* USER CODE END Includes */
 
-/* Private define ------------------------------------------------------------*/
-
-#define REC_UART_TX_Pin GPIO_PIN_2
-#define REC_UART_TX_GPIO_Port GPIOA
-#define REC_UART_RX_Pin GPIO_PIN_3
-#define REC_UART_RX_GPIO_Port GPIOA
-#define PWM1_Pin GPIO_PIN_6
-#define PWM1_GPIO_Port GPIOA
-#define PWM2_Pin GPIO_PIN_7
-#define PWM2_GPIO_Port GPIOA
-#define BUZZER_Pin GPIO_PIN_13
-#define BUZZER_GPIO_Port GPIOB
-#define PWM3_Pin GPIO_PIN_14
-#define PWM3_GPIO_Port GPIOB
-#define PWM4_Pin GPIO_PIN_15
-#define PWM4_GPIO_Port GPIOB
-#define PWM5_Pin GPIO_PIN_6
-#define PWM5_GPIO_Port GPIOC
-#define PWM6_Pin GPIO_PIN_7
-#define PWM6_GPIO_Port GPIOC
-#define PWM7_Pin GPIO_PIN_8
-#define PWM7_GPIO_Port GPIOC
-#define PWM8_Pin GPIO_PIN_9
-#define PWM8_GPIO_Port GPIOC
-#define PWM9_Pin GPIO_PIN_8
-#define PWM9_GPIO_Port GPIOA
-#define PWM10_Pin GPIO_PIN_9
-#define PWM10_GPIO_Port GPIOA
-#define PWM11_Pin GPIO_PIN_10
-#define PWM11_GPIO_Port GPIOA
-#define PWM12_Pin GPIO_PIN_11
-#define PWM12_GPIO_Port GPIOA
-#define LED1_Pin GPIO_PIN_10
-#define LED1_GPIO_Port GPIOC
-#define LED2_Pin GPIO_PIN_11
-#define LED2_GPIO_Port GPIOC
-#define LED3_Pin GPIO_PIN_12
-#define LED3_GPIO_Port GPIOC
-#define DBG_UART_TX_Pin GPIO_PIN_6
-#define DBG_UART_TX_GPIO_Port GPIOB
-#define DBG_UART_RX_Pin GPIO_PIN_7
-#define DBG_UART_RX_GPIO_Port GPIOB
+extern ADC_HandleTypeDef hadc;
 
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
 
-void _Error_Handler(char *, int);
+extern void _Error_Handler(char *, int);
 
-#define Error_Handler() _Error_Handler(__FILE__, __LINE__)
+void MX_ADC_Init(void);
+
+/* USER CODE BEGIN Prototypes */
+
+/* USER CODE END Prototypes */
+
+#ifdef __cplusplus
+}
+#endif
+#endif /*__ adc_H */
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-*/ 
+  */
 
-#endif /* __MAIN_H */
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
